@@ -50,36 +50,26 @@ __author__ = "???"
 
 
 def create_mimic_dict(filename):
-    """Returns mimic dict mapping each word to list of words which follow it. 
-    For example:
-        Input: "I am a software developer, and I don't care who knows"
-        Output: 
-            {
-                "" : ["I"],
-                "I" : ["am", "don't"], 
-                "am": ["a"], 
-                "a": ["software"],
-                "software" : ["developer,"],
-                "developer," : ["and"],
-                "and" : ["I"],
-                "I" : ["don't"],
-                "don't" : ["care"],
-                "care" : ["who"],
-                "who" : ["knows"]
-            }
-    """
-    # +++your code here+++
-    
+    mimic = {}
+    with open(filename, "r") as f:
+        filearr = f.read().split()
+        mimic[""] = [filearr[0]]
+        for i in range(len(filearr)-1):
+            if filearr[i] not in mimic:
+                mimic[filearr[i]] = [filearr[i+1]]
+            else:
+                mimic[filearr[i]] = mimic[filearr[i]] + [filearr[i+1]]
+        return mimic
 
 def print_mimic(mimic_dict, start_word):
-    """Given a previously compiled mimic_dict and start_word, prints 200 random words:
-        - Print the start_word
-        - Lookup the start_word in your mimic_dict and get it's next-list
-        - Randomly select a new word from the next-list
-        - Repeat this process 200 times
-    """
-    # +++your code here+++
-    pass
+    wordsArr = [start_word]
+    for i in range(200):
+        if wordsArr[-1] not in mimic_dict:
+            wordsArr.append(start_word)
+        else:
+            wordsArr.append(random.choice(mimic_dict[wordsArr[-1]]))
+    string = " ".join(wordsArr)
+    print(string)
 
 
 # Provided main(), calls mimic_dict() and mimic()
